@@ -1,26 +1,142 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ───────── Token: palet "old money" (cokelat muda, jingga tua, kuningan) ───────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ivory: #fbf5e8;
+  --color-parchment: #f4e9d6;
+  --color-linen: #ebdcc0;
+  --color-sand: #e0c9a3;
+  --color-camel: #c9a374;
+  --color-tan: #a8794a;
+  --color-leather: #6b4426;
+  --color-walnut: #2e1b10;
+  --color-cognac: #b4531a; /* jingga tua */
+  --color-rust: #8c3d10; /* jingga tua, versi teks di latar terang */
+  --color-ember: #e29a5a; /* jingga terang, untuk teks di latar gelap */
+  --color-brass: #b08a3e;
+
+  --font-display: var(--f-display), "Cormorant Garamond", Georgia, serif;
+  --font-body: var(--f-body), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  /* tekstur serat kertas */
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .23 0 0 0 0 .1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-parchment);
+  color: var(--color-walnut);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(180 83 26 / 0.28);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-cognac);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ───────── Tekstur kertas ───────── */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--noise);
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.grain-dark::before {
+  opacity: 0.35;
+  mix-blend-mode: soft-light;
+}
+
+/* ───────── Bingkai ganda ala kop surat ───────── */
+.frame-double {
+  border: 1px solid rgb(176 138 62 / 0.65);
+  outline: 1px solid rgb(176 138 62 / 0.4);
+  outline-offset: -9px;
+}
+
+/* ───────── Garis titik-titik penghubung (gaya buku besar) ───────── */
+.leader {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.leader > i {
+  flex: 1;
+  border-bottom: 1px dotted currentColor;
+  opacity: 0.45;
+  transform: translateY(-0.25em);
+}
+
+/* ───────── Motif kain klasik untuk kartu proyek ───────── */
+.pola {
+  position: absolute;
+  inset: 0;
+}
+.pola-pinstripe {
+  --c: rgb(140 61 16 / 0.4);
+  background-image: repeating-linear-gradient(90deg, var(--c) 0 1px, transparent 1px 11px);
+}
+.pola-plaid {
+  --c: rgb(176 138 62 / 0.3);
+  background-image:
+    repeating-linear-gradient(0deg, var(--c) 0 7px, transparent 7px 24px),
+    repeating-linear-gradient(90deg, var(--c) 0 7px, transparent 7px 24px);
+}
+.pola-argyle {
+  --c: rgb(107 68 38 / 0.35);
+  background-size: 28px 28px;
+  background-image:
+    linear-gradient(45deg, var(--c) 1px, transparent 1px),
+    linear-gradient(-45deg, var(--c) 1px, transparent 1px);
+}
+.pola-herringbone {
+  --c: rgb(140 61 16 / 0.2);
+  background-size: 26px 26px;
+  background-image:
+    linear-gradient(135deg, var(--c) 25%, transparent 25%),
+    linear-gradient(225deg, var(--c) 25%, transparent 25%),
+    linear-gradient(315deg, var(--c) 25%, transparent 25%),
+    linear-gradient(45deg, var(--c) 25%, transparent 25%);
+  background-position: -13px 0, -13px 0, 0 0, 0 0;
+}
+
+/* ───────── Gerak: satu-satunya animasi otomatis (cincin segel) ───────── */
+@keyframes putar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.seal-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: putar 120s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .seal-ring {
+    animation: none;
+  }
 }
